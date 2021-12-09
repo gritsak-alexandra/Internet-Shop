@@ -1,0 +1,36 @@
+﻿@model Dictionary<Thing, int>
+
+
+
+<div class="row">
+    @{
+        int price = 0;
+        foreach (var thing in Model)
+        {
+            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                <div class="products-single fix">
+                    <div class="card shadow-sm">
+                        <div class="box-img-hover">
+                            <img src="@thing.Key.img" class="img-fluid" alt="@thing.Key.img" width="50%" height="50%">
+                        </div>
+                        <div class="why-text">
+                            <h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Название: @thing.Key.name</font></font></h4>
+                            <h6><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Цена: @thing.Key.price $</font></font></h6>
+                            <h6><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Количество: @thing.Value штука/штук</font></font></h6>
+                            <form class="mask-icon" asp-controller="Shop" asp-action="AddToCart">
+                                <input type="hidden" name="prodId" value="@thing.Key.id" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            price += @thing.Key.price;
+        }
+
+    }
+
+</div>
+<h3><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Общая стоимость - @price $</font></font></h3>
+<form asp-controller="Shop" asp-action="Confirm">
+    <input type="submit" value="Оформить заказ" />
+</form>
