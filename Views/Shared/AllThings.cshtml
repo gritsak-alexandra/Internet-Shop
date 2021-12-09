@@ -1,0 +1,21 @@
+﻿@model shhop.Models.Thing
+
+<div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
+    <div class="products-single fix">
+        <div class="card shadow-sm">
+            <div class="card shadow-sm">
+                <img src="@Model.img" class="img-fluid" alt="@Model.img" width="50%" height="50%">
+            </div>
+            <div class="why-text">
+                <h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Название :@Model.name</font></font></h4>
+                <h5><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Автор: @Model.author</font></font></h5>
+                <h6><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Описание: @Model.description</font></font></h6>
+                <h6><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Цена: @Model.price $</font></font></h6>
+                <form class="mask-icon" asp-controller="Shop" asp-action="AddToCart">
+                    <input type="hidden" name="prodId" value="@Model.id" />
+                    <input type="submit" class="cart" value="Добавить в корзину">
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
