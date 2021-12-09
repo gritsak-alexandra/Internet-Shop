@@ -1,0 +1,15 @@
+﻿@using shhop.ViewModels;
+@model ThingListViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+    @{ 
+        foreach (Thing thing in Model.allThings)
+            {
+                @await Html.PartialAsync("AllThings",thing)
+            }
+    }
+</div>
