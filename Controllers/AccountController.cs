@@ -21,29 +21,29 @@ namespace shhop.Controllers
             _signInManager = signInManager;
         }
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult Register() //вид регистрации
         {
             return View();
         }
         [HttpGet]
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login(string returnUrl = null) //вид входа
         {
             return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model) //вход пользователя
         {
             if (ModelState.IsValid)
             {
                 var result =
-                    await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
-                if (result.Succeeded)
+                    await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false); //получаем модель для входа пользователя
+                if (result.Succeeded) //если успешно
                 {
                     // проверяем, принадлежит ли URL приложению
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                     {
-                        return Redirect(model.ReturnUrl);
+                        return Redirect(model.ReturnUrl); //возвращаем модель
                     }
                     else
                     {
@@ -62,26 +62,26 @@ namespace shhop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            // удаляем аутентификационные куки
+            // удаляем аутентификационные куки //выход из пользователя
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model) //регистрация пользователя
         {
             if (ModelState.IsValid)
             {
-                User user = new User { Email = model.Email, UserName = model.Email, Year = model.Year };
+                User user = new User { Email = model.Email, UserName = model.Email, Year = model.Year }; //получаем модель пользователя
                 // добавляем пользователя
-                var result = await _userManager.CreateAsync(user, model.Password);
+                var result = await _userManager.CreateAsync(user, model.Password);// получаем резульат регистрации
                 if (result.Succeeded)
                 {
                     // установка куки
-                    await _signInManager.SignInAsync(user, false);
+                    await _signInManager.SignInAsync(user, false); //получение возможности войти для пользователя
                     return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    foreach (var error in result.Errors)
+                    foreach (var error in result.Errors) 
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
