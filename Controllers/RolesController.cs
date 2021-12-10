@@ -23,16 +23,16 @@ namespace shhop.Controllers
 
         public IActionResult Create() => View();
         [HttpPost]
-        public async Task<IActionResult> Create(string name)
+        public async Task<IActionResult> Create(string name) //создание роли
         {
-            if (!string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(name))// название роли не пустое
             {
-                IdentityResult result = await _roleManager.CreateAsync(new IdentityRole(name));
-                if (result.Succeeded)
+                IdentityResult result = await _roleManager.CreateAsync(new IdentityRole(name)); //создание новой роли
+                if (result.Succeeded) //если успешно
                 {
                     return RedirectToAction("Index");
                 }
-                else
+                else //иначе
                 {
                     foreach (var error in result.Errors)
                     {
@@ -44,19 +44,19 @@ namespace shhop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(string id) //удаление роли
         {
-            IdentityRole role = await _roleManager.FindByIdAsync(id);
-            if (role != null)
+            IdentityRole role = await _roleManager.FindByIdAsync(id); //получаем id пользователя
+            if (role != null) //если существует
             {
-                IdentityResult result = await _roleManager.DeleteAsync(role);
+                IdentityResult result = await _roleManager.DeleteAsync(role); //удаляем роль
             }
             return RedirectToAction("Index");
         }
 
-        public IActionResult UserList() => View(_userManager.Users.ToList());
+        public IActionResult UserList() => View(_userManager.Users.ToList()); //
 
-        public async Task<IActionResult> Edit(string userId)
+        public async Task<IActionResult> Edit(string userId) //вывод ролей конкретного пользователя
         {
             // получаем пользователя
             User user = await _userManager.FindByIdAsync(userId);
@@ -65,20 +65,20 @@ namespace shhop.Controllers
                 // получем список ролей пользователя
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var allRoles = _roleManager.Roles.ToList();
-                ChangeRoleViewModel model = new ChangeRoleViewModel
+                ChangeRoleViewModel model = new ChangeRoleViewModel //вывод модели
                 {
                     UserId = user.Id,
                     UserEmail = user.Email,
                     UserRoles = userRoles,
                     AllRoles = allRoles
                 };
-                return View(model);
+                return View(model); // вовращаем модель
             }
 
             return NotFound();
         }
         [HttpPost]
-        public async Task<IActionResult> Edit(string userId, List<string> roles)
+        public async Task<IActionResult> Edit(string userId, List<string> roles) // редактирование прав доступа пользователям
         {
             // получаем пользователя
             User user = await _userManager.FindByIdAsync(userId);
@@ -93,11 +93,11 @@ namespace shhop.Controllers
                 // получаем роли, которые были удалены
                 var removedRoles = userRoles.Except(roles);
 
-                await _userManager.AddToRolesAsync(user, addedRoles);
+                await _userManager.AddToRolesAsync(user, addedRoles); // добавление роли пользователю
 
-                await _userManager.RemoveFromRolesAsync(user, removedRoles);
+                await _userManager.RemoveFromRolesAsync(user, removedRoles); //удаление роли пользователя
 
-                return RedirectToAction("UserList");
+                return RedirectToAction("UserList"); // возвращение на список пользователей
             }
 
             return NotFound();
