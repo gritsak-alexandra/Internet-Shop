@@ -19,50 +19,50 @@ namespace shhop.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult GetCatHud()
+        public IActionResult GetCatHud()// вывод товаров в категорию худ.литературы
         {
             return RedirectToAction("Index", "Home", new { category = "4" });
         }
-        public IActionResult GetCatMang()
+        public IActionResult GetCatMang() // вывод товаров в категорию манги
         {
             return RedirectToAction("Index", "Home", new { category = "2" });
         }
 
-        public async Task<IActionResult> AddToCart(int prodId)
+        public async Task<IActionResult> AddToCart(int prodId) //добавление в корзину
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User); //получение пользователя в системе
 
-            await _applicationContext.Cart.AddAsync(new Cart() { UserId = user.Id, ThingId = prodId });
-            await _applicationContext.SaveChangesAsync();
+            await _applicationContext.Cart.AddAsync(new Cart() { UserId = user.Id, ThingId = prodId }); // создание корзины и добавление в нее товара для пользователя
+            await _applicationContext.SaveChangesAsync(); //сохранение изменений
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home"); //возвращение на главную страницу
         }
 
-        public async Task<IActionResult> ShowCart()
+        public async Task<IActionResult> ShowCart() //вывод содержимого корзины
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User); //получение пользователя в системе
 
-            var tempcart = _applicationContext.Cart
-                .Where(c => c.UserId == user.Id)
-                .Select(c => c.Thing)
+            var tempcart = _applicationContext.Cart //получение содержимого корзины для пользователя
+                .Where(c => c.UserId == user.Id) //для пользователя
+                .Select(c => c.Thing) //каждый товар
                 .ToList();
-            var cart = new Dictionary<Thing, int>();
-            foreach(var thing in tempcart)
+            var cart = new Dictionary<Thing, int>(); // словарь из товара и их количества
+            foreach(var thing in tempcart) //цикл по товарам
             {
-                int count = tempcart.Count(t => t == thing);
-                cart.TryAdd(thing, count);
+                int count = tempcart.Count(t => t == thing); //подсчет товаров
+                cart.TryAdd(thing, count); //добавление товара в словарь
             }
             return View(cart);
         }
-        public async Task<IActionResult> Confirm()
+        public async Task<IActionResult> Confirm() //оформление заказа
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User); //получение пользователя в системе
 
-            var cart = _applicationContext.Cart
-                .Where(c => c.UserId == user.Id);
+            var cart = _applicationContext.Cart //получение содержимого корзины для пользователя
+                .Where(c => c.UserId == user.Id); //
 
-            _applicationContext.RemoveRange(cart);
-            await _applicationContext.SaveChangesAsync()
+            _applicationContext.RemoveRange(cart); //оформление заказа и очищение корзины
+            await _applicationContext.SaveChangesAsync() //сохранение изменений
 ;
             return View();
         }
