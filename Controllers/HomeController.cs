@@ -22,13 +22,13 @@ namespace shhop.Controllers
             this.context = context;
         }
 
-        public IActionResult Index(string category)
+        public IActionResult Index(string category) //вывод главной странички
         {
-            string _category = category;
-            string _categoryItem = null;
-            IEnumerable<Thing> things = null;
-            string currCategory = "";
-            string currCategoryItem = "";
+            string _category = category; //категория
+            string _categoryItem = null; //товар в категории
+            IEnumerable<Thing> things = null; //все товары
+            string currCategory = ""; //текущая категория
+            string currCategoryItem = ""; //товар в текущей категории
             if (string.IsNullOrEmpty(category))
             {
                 things = context.Thing.OrderBy(t => t.id);
@@ -39,7 +39,7 @@ namespace shhop.Controllers
                 things = context.Thing.Where(t => t.categoryId == int.Parse(category)).OrderBy(t => t.id);
             }
 
-            var thingObj = new ThingListViewModel
+            var thingObj = new ThingListViewModel //вывод 
             {
                 allThings = things,
                 currCategory = currCategory,
@@ -49,7 +49,7 @@ namespace shhop.Controllers
             return View(thingObj);
         }
 
-        public IActionResult Privacy()
+        public IActionResult Privacy() //вывод privacy
         {
             return View();
         }
